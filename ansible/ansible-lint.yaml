@@ -1,29 +1,15 @@
 ---
-resource_types:
-  - name: onepassword-secret
-    type: registry-image
-    source:
-      repository: ghcr.io/samsimpson1/onepassword-secret-resource
-      tag: latest
 resources:
   - name: ansible
     type: git
     source:
       uri: https://github.com/samsimpson1/ansible
       branch: main
-  - name: vault-password
-    type: onepassword-secret
-    source:
-      vault: Infrastructure
-      item: ansible-vault
-      field: password
-      op_service_account_token: ((op_service_account_token))
 jobs:
   - name: ansible-lint
     plan:
       - get: ansible
         trigger: true
-      - get: vault-password
       - task: run-ansible-lint
         config:
           platform: linux
@@ -34,12 +20,12 @@ jobs:
               tag: "latest"
           inputs:
             - name: ansible
-            - name: vault-password
           run:
             path: bash
             args:
               - "-c"
               - |
+                echo "((ansible-vault.password))" > vault-password
                 cd ansible
                 ansible-galaxy install -r requirements.yaml
-                ANSIBLE_VAULT_PASSWORD_FILE=../vault-password/value ansible-lint
+                ANSIBLE_VAULT_PASSWORD_FILE=../vault-password ansible-lint
