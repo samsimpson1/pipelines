@@ -9,12 +9,10 @@ jobs:
     plan:
       - get: pipelines-repo
         trigger: true
+      # main pipeline
       - set_pipeline: configure-pipelines
         file: pipelines-repo/configure-pipelines.yaml
-  - name: ansible-pipelines
-    plan:
-      - get: pipelines-repo
-        trigger: true
+      # ansible
       - set_pipeline: ansible-lint
         file: pipelines-repo/ansible/ansible-lint.yaml
       - set_pipeline: ansible-container-build
