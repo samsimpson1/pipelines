@@ -30,8 +30,8 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: debian
-              tag: "12"
+              repository: ghcr.io/samsimpson1/ansible-container
+              tag: "latest"
           inputs:
             - name: ansible
             - name: vault-password
@@ -40,11 +40,6 @@ jobs:
             args:
               - "-c"
               - |
-                apt-get update
-                apt-get install -y python3-pip python3-venv git
-                python3 -m venv venv
-                . venv/bin/activate
-                pip3 install ansible ansible-lint
                 cd ansible
                 ansible-galaxy install -r requirements.yaml
                 ANSIBLE_VAULT_PASSWORD_FILE=../vault-password/value ansible-lint
