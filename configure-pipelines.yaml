@@ -15,5 +15,5 @@ jobs:
     plan:
       - get: pipelines-repo
         trigger: true
-      - set_pipeline: ansible-pipelines
+      - set_pipeline: ansible-lint
         file: pipelines-repo/ansible/ansible-lint.yaml
