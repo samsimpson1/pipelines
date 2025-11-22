@@ -17,3 +17,5 @@ jobs:
         trigger: true
       - set_pipeline: ansible-lint
         file: pipelines-repo/ansible/ansible-lint.yaml
+      - set_pipeline: ansible-container-build
+        file: pipelines-repo/ansible/ansible-container-build.yaml

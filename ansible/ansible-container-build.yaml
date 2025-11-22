@@ -1,0 +1,41 @@
+---
+resources:
+  - name: ansible-git
+    type: git
+    source:
+      uri: https://github.com/samsimpson1/ansible.git
+      branch: main
+      paths:
+        - container/*
+  - name: ansible-registry
+    type: registry-image
+    source:
+      repository: ghcr.io/samsimpson1/ansible
+      username: ((ghcr-pat.username))
+      password: ((ghcr-pat.password))
+      tag: latest
+jobs:
+  - name: build-container
+    plan:
+      - get: ansible-git
+        trigger: true
+      - task: build-ansible-container
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: concourse/oci-build-task
+              tag: "latest"
+          params:
+            CONTEXT: ansible-git/container
+          inputs:
+            - name: ansible-git
+          outputs:
+            - name: image
+          run:
+            path: build
+      - put: ansible-registry
+        params:
+          image: image/image.tar
