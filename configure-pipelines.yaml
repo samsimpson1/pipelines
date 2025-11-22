@@ -1,0 +1,19 @@
+resources:
+  - name: pipelines-repo
+    type: git
+    source:
+      uri: https://github.com/samsimpson1/pipelines
+      branch: main
+jobs:
+  - name: configure-pipelines
+    plan:
+      - get: pipelines-repo
+        trigger: true
+      - set_pipeline: configure-pipelines
+        file: pipelines-repo/configure-pipelines.yaml
+  - name: ansible-pipelines
+    plan:
+      - get: pipelines-repo
+        trigger: true
+      - set_pipeline: ansible-pipelines
+        file: pipelines-repo/ansible/ansible-lint.yaml
