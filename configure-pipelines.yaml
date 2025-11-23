@@ -17,3 +17,5 @@ jobs:
         file: pipelines-repo/ansible/ansible-lint.yaml
       - set_pipeline: ansible-container-build
         file: pipelines-repo/ansible/ansible-container-build.yaml
+      - set_pipeline: ansible-deploy
+        file: pipelines-repo/ansible/ansible-deploy.yaml

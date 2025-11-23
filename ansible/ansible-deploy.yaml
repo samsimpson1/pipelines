@@ -1,0 +1,38 @@
+---
+resources:
+  - name: ansible
+    type: git
+    source:
+      uri: https://github.com/samsimpson1/ansible
+      branch: main
+jobs:
+  - name: ansible-deploy
+    plan:
+      - get: ansible
+        trigger: true
+      - task: run-ansible-deploy
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: ghcr.io/samsimpson1/ansible
+              tag: "latest"
+          inputs:
+            - name: ansible
+          run:
+            path: bash
+            args:
+              - "-c"
+              - |
+                echo "((ansible-vault.password))" > vault_password
+                echo "((ssh.key))" > ssh_key
+                chmod 600 ssh_key
+
+                cd ansible
+                export ANSIBLE_HOST_KEY_CHECKING=false
+                export ANSIBLE_PRIVATE_KEY_FILE=../ssh_key
+                export ANSIBLE_VAULT_PASSWORD_FILE=../vault_password
+
+                ansible-galaxy install -r requirements.yaml
+                ansible-playbook play-*.yaml
