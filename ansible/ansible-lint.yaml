@@ -1,15 +1,27 @@
 ---
-resources:
-  - name: ansible
-    type: git
+resource_types:
+  - name: pull-request
+    type: registry-image
     source:
-      uri: https://github.com/samsimpson1/ansible
-      branch: main
+      repository: cfcommunity/github-pr-resource
+resources:
+  - name: pull-request
+    type: pull-request
+    check_every: 24h
+    webhook_token: ((webhook.token))
+    source:
+      repository: samsimpson1/ansible
+      access_token: ((github-pr-status.token))
 jobs:
   - name: ansible-lint
     plan:
-      - get: ansible
-        trigger: true
+      - get: pull-request
+        trigger: false
+        version: every
+      - put: pull-request
+        params:
+          path: pull-request
+          status: pending
       - task: run-ansible-lint
         config:
           platform: linux
@@ -19,13 +31,22 @@ jobs:
               repository: ghcr.io/samsimpson1/ansible
               tag: "latest"
           inputs:
-            - name: ansible
+            - name: pull-request
           run:
             path: bash
             args:
               - "-c"
               - |
                 echo "((ansible-vault.password))" > vault-password
-                cd ansible
+                cd pull-request
                 ansible-galaxy install -r requirements.yaml
                 ANSIBLE_VAULT_PASSWORD_FILE=../vault-password ansible-lint
+        on_failure:
+          put: pull-request
+          params:
+            path: pull-request
+            status: failure
+      - put: pull-request
+        params:
+          path: pull-request
+          status: success
