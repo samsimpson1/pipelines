@@ -2,6 +2,7 @@
 resources:
   - name: ansible-git
     type: git
+    check_every: 5m
     source:
       uri: https://github.com/samsimpson1/ansible.git
       branch: main
