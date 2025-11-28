@@ -19,3 +19,6 @@ jobs:
         file: pipelines-repo/ansible/ansible-container-build.yaml
       - set_pipeline: ansible-deploy
         file: pipelines-repo/ansible/ansible-deploy.yaml
+      # terraform
+      - set_pipeline: terraform-public
+        file: terraform/terraform-public.yaml

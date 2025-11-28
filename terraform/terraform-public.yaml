@@ -1,0 +1,57 @@
+---
+resource_types:
+  - name: pull-request
+    type: registry-image
+    source:
+      repository: cfcommunity/github-pr-resource
+resources:
+  - name: pull-request
+    type: pull-request
+    check_every: 24h
+    webhook_token: ((webhook.token))
+    source:
+      repository: samsimpson1/terraform-public
+      access_token: ((github-pr-status.token))
+jobs:
+  - name: terraform-pr
+    plan:
+      - get: pull-request
+        trigger: true
+        version: every
+      - put: pull-request
+        params:
+          path: pull-request
+          status: pending
+      - task: run-terraform-plan
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: hashicorp/terraform
+              tag: "latest"
+          inputs:
+            - name: pull-request
+          run:
+            path: /bin/sh
+            args:
+              - "-c"
+              - |
+                cd pull-request && \
+                  terraform init && \
+                  terraform plan
+          params:
+            VAULT_ADDR: "https://vault.int.simpson.id"
+            VAULT_TOKEN: "((vault-webhook-read.token))"
+            AWS_ACCESS_KEY_ID: "((terraform-state-bucket-access.aws_access_key_id))"
+            AWS_SECRET_ACCESS_KEY: "((terraform-state-bucket-access.aws_secret_access_key))"
+            GITHUB_TOKEN: "((github.token))"
+        on_failure:
+          put: pull-request
+          params:
+            path: pull-request
+            status: failure
+      - put: pull-request
+        params:
+          path: pull-request
+          status: success
