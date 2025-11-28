@@ -16,7 +16,7 @@ jobs:
   - name: ansible-lint
     plan:
       - get: pull-request
-        trigger: false
+        trigger: true
         version: every
       - put: pull-request
         params:
