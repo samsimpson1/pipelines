@@ -21,4 +21,4 @@ jobs:
         file: pipelines-repo/ansible/ansible-deploy.yaml
       # terraform
       - set_pipeline: terraform-public
-        file: terraform/terraform-public.yaml
+        file: pipelines-repo/terraform/terraform-public.yaml
