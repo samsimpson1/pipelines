@@ -12,7 +12,41 @@ resources:
     source:
       repository: samsimpson1/terraform-public
       access_token: ((github-pr-status.token))
+  - name: main
+    type: git
+    check_every: 5m
+    source:
+      uri: https://github.com/samsimpson1/terraform-public
+      branch: main
 jobs:
+  - name: terraform-apply
+    plan:
+      - get: main
+        trigger: true
+      - task: run-terraform-apply
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: hashicorp/terraform
+              tag: "latest"
+          inputs:
+            - name: main
+          run:
+            path: /bin/sh
+            args:
+              - "-c"
+              - |
+                cd main && \
+                  terraform init && \
+                  terraform apply -auto-approve
+          params:
+            VAULT_ADDR: "https://vault.int.simpson.id"
+            VAULT_TOKEN: "((vault-webhook-read.token))"
+            AWS_ACCESS_KEY_ID: "((terraform-state-bucket-access.aws_access_key_id))"
+            AWS_SECRET_ACCESS_KEY: "((terraform-state-bucket-access.aws_secret_access_key))"
+            GITHUB_TOKEN: "((github.token))"
   - name: terraform-pr
     plan:
       - get: pull-request
