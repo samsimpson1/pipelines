@@ -47,7 +47,7 @@ jobs:
             AWS_ACCESS_KEY_ID: "((terraform-state-bucket-access.aws_access_key_id))"
             AWS_SECRET_ACCESS_KEY: "((terraform-state-bucket-access.aws_secret_access_key))"
             GITHUB_TOKEN: "((github.token))"
-  - name: terraform-pr
+  - name: terraform-plan
     plan:
       - get: pull-request
         trigger: true
