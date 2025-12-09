@@ -1,0 +1,42 @@
+---
+resources:
+  - name: pipelines-git
+    type: git
+    check_every: 5m
+    source:
+      uri: https://github.com/samsimpson1/pipelines.git
+      branch: main
+      paths:
+        - storage-box-metrics-image/*
+  - name: registry
+    type: registry-image
+    source:
+      repository: ghcr.io/samsimpson1/storage-box-metrics
+      username: ((ghcr-pat.username))
+      password: ((ghcr-pat.password))
+      tag: latest
+jobs:
+  - name: build-image
+    plan:
+      - get: pipelines-git
+        trigger: true
+      - task: build-storage-box-metrics-image
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: concourse/oci-build-task
+              tag: "latest"
+          params:
+            CONTEXT: pipelines-git/storage-box-metrics-image
+          inputs:
+            - name: pipelines-git
+          outputs:
+            - name: image
+          run:
+            path: build
+      - put: registry
+        params:
+          image: image/image.tar
