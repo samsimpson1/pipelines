@@ -36,4 +36,4 @@ jobs:
                 export ANSIBLE_VAULT_PASSWORD_FILE=../vault_password
 
                 ansible-galaxy install -r requirements.yaml
-                ansible-playbook play-*.yaml
+                ansible-playbook *.play.yaml
