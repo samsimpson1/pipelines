@@ -1,12 +1,17 @@
 ---
 resource_types:
-  - name: github-token
+  - name: github-token-resource
     type: registry-image
     source:
       repository: ghcr.io/tenjaa/concourse-github-app-token
+  - name: cron-resource
+    type: registry-image
+    check_every: 20m
+    source:
+      repository: governmentdigitalservice/pay-cron-resource
 resources:
   - name: github-token
-    type: github-token
+    type: github-token-resource
     source:
       appId: "((github-app.id))"
       privateKey: "((github-app.private-key))"
@@ -16,9 +21,17 @@ resources:
     source:
       uri: https://github.com/samsimpson1/pipelines.git
       branch: main
+  - name: cron-trigger
+    type: cron-resource
+    source:
+      expression: "37 */2 * * *"
+      location: "Europe/London"
+      fire_immediately: true
 jobs:
   - name: renovate
     plan:
+      - get: cron-trigger
+        trigger: true
       - put: github-token
       - load_var: github-token
         file: github-token/token
