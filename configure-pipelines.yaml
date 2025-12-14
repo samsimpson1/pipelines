@@ -22,6 +22,9 @@ jobs:
       # terraform
       - set_pipeline: terraform-public
         file: pipelines-repo/terraform/terraform-public.yaml
+      # renovate
+      - set_pipeline: renovate
+        file: pipelines-repo/renovate/pipeline.yaml
       # misc
       - set_pipeline: storage-box-metrics-image
         file: pipelines-repo/storage-box-metrics-image/pipeline.yaml
