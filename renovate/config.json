@@ -1,3 +1,6 @@
 {
-  "repositories": [ "samsimpson1/ansible" ]
+  "repositories": [
+    "samsimpson1/ansible",
+    "samsimpson1/pipelines"
+  ]
 }
