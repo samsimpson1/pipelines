@@ -28,3 +28,5 @@ jobs:
       # misc
       - set_pipeline: storage-box-metrics-image
         file: pipelines-repo/storage-box-metrics-image/pipeline.yaml
+      - set_pipeline: stonks-scraper-image
+        file: pipelines-repo/stonks-scraper-image/pipeline.yaml

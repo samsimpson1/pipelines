@@ -1,0 +1,52 @@
+---
+resource_types:
+  - name: datetime-version
+    type: registry-image
+    source:
+      repository: dcsg/datetime-version-resource
+resources:
+  - name: version
+    type: datetime-version
+    source:
+      timezone: "Europe/London"
+  - name: stonks-git
+    type: git
+    check_every: 5m
+    source:
+      uri: https://github.com/samsimpson1/stonks.git
+      branch: main
+  - name: stonks-registry
+    type: registry-image
+    source:
+      repository: ghcr.io/samsimpson1/stonks
+      username: ((ghcr-pat.username))
+      password: ((ghcr-pat.password))
+jobs:
+  - name: build-container
+    plan:
+      - get: stonks-git
+        trigger: true
+      - put: version
+      - task: build-stonks-container
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: concourse/oci-build-task
+              tag: "latest"
+          params:
+            CONTEXT: stonks-git
+          inputs:
+            - name: stonks-git
+          outputs:
+            - name: image
+          run:
+            path: build
+      - load_var: version
+        file: version/version
+      - put: stonks-registry
+        params:
+          image: image/image.tar
+          version: ((.:version))
