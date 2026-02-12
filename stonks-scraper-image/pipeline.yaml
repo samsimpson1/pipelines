@@ -8,6 +8,7 @@ resources:
   - name: version
     type: datetime-version
     source:
+      format: "2006.01.02-150405"
       timezone: "Europe/London"
   - name: stonks-git
     type: git
