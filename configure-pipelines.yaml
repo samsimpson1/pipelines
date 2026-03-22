@@ -26,6 +26,8 @@ jobs:
       - set_pipeline: renovate
         file: pipelines-repo/renovate/pipeline.yaml
       # misc
+      - set_pipeline: obsidian-headless-image
+        file: pipelines-repo/obsidian-headless-image/pipeline.yaml
       - set_pipeline: storage-box-metrics-image
         file: pipelines-repo/storage-box-metrics-image/pipeline.yaml
       - set_pipeline: stonks-scraper-image
