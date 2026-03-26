@@ -1,0 +1,53 @@
+---
+resource_types:
+  - name: datetime-version
+    type: registry-image
+    source:
+      repository: dcsg/datetime-version-resource
+resources:
+  - name: version
+    type: datetime-version
+    source:
+      format: "2006.01.02-150405"
+      timezone: "Europe/London"
+  - name: notes-agent-git
+    type: git
+    check_every: 5m
+    source:
+      uri: https://github.com/samsimpson1/notes-agent.git
+      branch: main
+  - name: notes-agent-registry
+    type: registry-image
+    source:
+      repository: ghcr.io/samsimpson1/notes-agent
+      username: ((ghcr-pat.username))
+      password: ((ghcr-pat.password))
+jobs:
+  - name: build-container
+    plan:
+      - get: notes-agent-git
+        trigger: true
+      - put: version
+      - task: build-notes-agent-container
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: concourse/oci-build-task
+              tag: "latest"
+          params:
+            CONTEXT: notes-agent-git
+          inputs:
+            - name: notes-agent-git
+          outputs:
+            - name: image
+          run:
+            path: build
+      - load_var: version
+        file: version/version
+      - put: notes-agent-registry
+        params:
+          image: image/image.tar
+          version: ((.:version))
