@@ -1,0 +1,63 @@
+---
+resource_types:
+  - name: forgejo-commit-status
+    type: registry-image
+    source:
+      repository: tophattedcat/forgejo-commit-resource
+resources:
+  - name: pi
+    type: git
+    check_every: 20m
+    source:
+      uri: https://git.sams.wtf/tophattedcat/pi.git
+      branch: ((branch))
+  - name: status
+    type: forgejo-commit-status
+    source:
+      forgejo_url: "((forgejo.url))"
+      api_key: "((forgejo.token))"
+      owner: "tophattedcat"
+      repository: "pi"
+jobs:
+  - name: test
+    plan:
+      - get: pi
+        trigger: true
+      - put: status
+        params:
+          ref: "((.:pi.commit))"
+          context: "Test"
+          description: "Tests running..."
+          state: "pending"
+      - task: run-tests
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: alpine
+              tag: "3.24"
+          inputs:
+            - name: pi
+          run:
+            path: sh
+            args:
+              - "-c"
+              - |
+                apk add --quiet --no-cache --no-progress nodejs-current npm
+                cd pi
+                npm ci --ignore-scripts
+                npm test
+        on_failure:
+          put: status
+          params:
+            ref: "((.:pi.commit))"
+            context: "Test"
+            description: "Tests failed"
+            state: "failure"
+      - put: status
+        params:
+          ref: "((.:pi.commit))"
+          context: "Test"
+          description: "Tests passed"
+          state: "success"

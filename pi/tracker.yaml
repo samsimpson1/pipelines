@@ -1,0 +1,30 @@
+resource_types:
+  - name: git-branches
+    type: registry-image
+    source:
+      repository: tophattedcat/git-branches-resource
+resources:
+  - name: branches
+    check_every: 20m0s
+    type: git-branches
+    source:
+      uri: https://git.sams.wtf/tophattedcat/pi.git
+  - name: pipelines-repo
+    type: git
+    source:
+      uri: https://github.com/samsimpson1/pipelines
+      branch: main
+jobs:
+  - name: tracker
+    plan:
+      - get: branches
+        trigger: true
+      - get: pipelines-repo
+      - load_var: list
+        file: branches/branches.json
+      - across:
+          - var: branch
+            values: ((.:list))
+        set_pipeline: pi-test
+        file: pipelines-repo/pi/pipeline.yaml
+        instance_vars: { branch: ((.:branch)) }

@@ -34,3 +34,5 @@ jobs:
         file: pipelines-repo/storage-box-metrics-image/pipeline.yaml
       - set_pipeline: stonks-scraper-image
         file: pipelines-repo/stonks-scraper-image/pipeline.yaml
+      - set_pipeline: pi-tracker
+        file: pipelines-repo/pi/tracker.yaml
