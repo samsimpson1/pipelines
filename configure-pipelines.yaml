@@ -27,7 +27,7 @@ jobs:
         file: pipelines-repo/renovate/pipeline.yaml
       # misc
       - set_pipeline: notes-agent-image
-        file: notes-agent-image/pipeline.yaml
+        file: pipelines-repo/notes-agent-image/pipeline.yaml
       - set_pipeline: obsidian-headless-image
         file: pipelines-repo/obsidian-headless-image/pipeline.yaml
       - set_pipeline: storage-box-metrics-image
