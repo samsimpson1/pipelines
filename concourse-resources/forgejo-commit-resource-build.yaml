@@ -1,0 +1,40 @@
+---
+resources:
+  - name: repo
+    type: git
+    check_every: 20m
+    source:
+      uri: https://git.sams.wtf/tophattedcat/forgejo-commit-resource.git
+      branch: main
+  - name: registry
+    type: registry-image
+    source:
+      repository: docker.io/tophattedcat/forgejo-commit-resource
+      tag: latest
+      username: ((docker-hub.username))
+      password: ((docker-hub.pat))
+jobs:
+  - name: build
+    plan:
+      - get: repo
+        trigger: true
+      - task: build-image
+        privileged: true
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: concourse/oci-build-task
+              tag: latest
+          params:
+            CONTEXT: repo
+          inputs:
+            - name: repo
+          outputs:
+            - name: image
+          run:
+            path: build
+      - put: registry
+        params:
+          image: image/image.tar
