@@ -23,8 +23,10 @@ jobs:
       - set_pipeline: terraform-public
         file: pipelines-repo/terraform/terraform-public.yaml
       # renovate
-      - set_pipeline: renovate
-        file: pipelines-repo/renovate/pipeline.yaml
+      - set_pipeline: renovate-github
+        file: pipelines-repo/renovate/github.yaml
+      - set_pipeline: renovate-forgejo
+        file: pipelines-repo/renovate/forgejo.yaml
       # misc
       - set_pipeline: notes-agent-image
         file: pipelines-repo/notes-agent-image/pipeline.yaml

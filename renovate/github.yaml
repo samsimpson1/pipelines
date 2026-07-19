@@ -16,11 +16,6 @@ resources:
       appId: "((github-app.id))"
       privateKey: "((github-app.private-key))"
       user: samsimpson1
-  - name: pipelines-git
-    type: git
-    source:
-      uri: https://github.com/samsimpson1/pipelines.git
-      branch: main
   - name: cron-trigger
     type: cron-resource
     source:
@@ -35,7 +30,6 @@ jobs:
       - put: github-token
       - load_var: github-token
         file: github-token/token
-      - get: pipelines-git
       - task: run-renovate
         config:
           platform: linux
@@ -44,12 +38,10 @@ jobs:
             source:
               repository: ghcr.io/renovatebot/renovate
               tag: "41.156"
-          inputs:
-            - name: pipelines-git
           run:
             path: renovate
           params:
-            RENOVATE_CONFIG_FILE: "pipelines-git/renovate/config.json"
             RENOVATE_PLATFORM: "github"
             RENOVATE_TOKEN: "((.:github-token))"
             RENOVATE_AUTODISCOVER: "false"
+            RENOVATE_REPOSITORIES: "samsimpson1/ansible,samsimpson1/pipelines"
