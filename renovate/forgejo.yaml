@@ -1,0 +1,49 @@
+---
+resource_types:
+  - name: github-token-resource
+    type: registry-image
+    source:
+      repository: ghcr.io/tenjaa/concourse-github-app-token
+  - name: cron-resource
+    type: registry-image
+    check_every: 20m
+    source:
+      repository: governmentdigitalservice/pay-cron-resource
+resources:
+  - name: github-token
+    type: github-token-resource
+    source:
+      appId: "((github-app.id))"
+      privateKey: "((github-app.private-key))"
+      user: samsimpson1
+  - name: cron-trigger
+    type: cron-resource
+    source:
+      expression: "37 */2 * * *"
+      location: "Europe/London"
+      fire_immediately: true
+jobs:
+  - name: renovate
+    plan:
+      - get: cron-trigger
+        trigger: true
+      - put: github-token
+      - load_var: github-token
+        file: github-token/token
+      - task: run-renovate
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: ghcr.io/renovatebot/renovate
+              tag: "43.271"
+          run:
+            path: renovate
+          params:
+            RENOVATE_ENDPOINT: "((forgejo.url))"
+            RENOVATE_PLATFORM: "forgejo"
+            RENOVATE_TOKEN: "((forgejo.token))"
+            RENOVATE_AUTODISCOVER: "false"
+            RENOVATE_REPOSITORIES: "tophattedcat/pi"
+            GITHUB_COM_TOKEN: "((.:github-token))"
