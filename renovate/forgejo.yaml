@@ -45,5 +45,5 @@ jobs:
             RENOVATE_PLATFORM: "forgejo"
             RENOVATE_TOKEN: "((forgejo.token))"
             RENOVATE_AUTODISCOVER: "false"
-            RENOVATE_REPOSITORIES: "tophattedcat/pi"
+            RENOVATE_REPOSITORIES: "tophattedcat/forgejo-commit-resource,tophattedcat/git-branches-resource,tophattedcat/pi"
             GITHUB_COM_TOKEN: "((.:github-token))"
