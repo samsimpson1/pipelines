@@ -4,7 +4,7 @@ resources:
     type: git
     check_every: 20m
     source:
-      uri: https://git.sams.wtf/tophattedcat/forgejo-commit-resource.git
+      uri: https://git.sams.wtf/things/forgejo-commit-resource.git
       branch: main
   - name: registry
     type: registry-image

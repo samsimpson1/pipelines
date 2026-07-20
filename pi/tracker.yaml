@@ -8,7 +8,7 @@ resources:
     check_every: 20m0s
     type: git-branches
     source:
-      uri: https://git.sams.wtf/tophattedcat/pi.git
+      uri: https://git.sams.wtf/things/pi.git
   - name: pipelines-repo
     type: git
     source:

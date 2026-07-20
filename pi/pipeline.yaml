@@ -9,7 +9,7 @@ resources:
     type: git
     check_every: 20m
     source:
-      uri: https://git.sams.wtf/tophattedcat/pi.git
+      uri: https://git.sams.wtf/things/pi.git
       branch: ((branch))
   - name: status
     type: forgejo-commit-status
