@@ -4,6 +4,7 @@ resource_types:
     type: registry-image
     source:
       repository: dcsg/datetime-version-resource
+      tag: latest
 resources:
   - name: version
     type: datetime-version
@@ -36,7 +37,7 @@ jobs:
             type: registry-image
             source:
               repository: concourse/oci-build-task
-              tag: "latest"
+              tag: "0.15.3"
           params:
             CONTEXT: notes-agent-git
           inputs:

@@ -4,11 +4,13 @@ resource_types:
     type: registry-image
     source:
       repository: ghcr.io/tenjaa/concourse-github-app-token
+      tag: latest
   - name: cron-resource
     type: registry-image
     check_every: 20m
     source:
       repository: governmentdigitalservice/pay-cron-resource
+      tag: "2026-07-21_08-34-52"
 resources:
   - name: github-token
     type: github-token-resource
