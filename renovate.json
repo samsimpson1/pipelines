@@ -1,3 +1,21 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "customManagers": [
+    {
+      "customType": "jsonata",
+      "description": "Update container images in Concourse pipelines",
+      "managerFilePatterns": [
+        "/\\.ya?ml$/"
+      ],
+      "fileFormat": "yaml",
+      "matchStrings": [
+        "resource_types[type = 'registry-image'].source[$exists(repository) and $exists(tag)].{'depName': repository, 'currentValue': $string(tag), 'depType': 'resource-type'}",
+        "resources[type = 'registry-image'].source[$exists(repository) and $exists(tag)].{'depName': repository, 'currentValue': $string(tag), 'depType': 'resource'}",
+        "**.image_resource[type = 'registry-image'].source[$exists(repository) and $exists(tag)].{'depName': repository, 'currentValue': $string(tag), 'depType': 'task-image'}"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    }
+  ]
 }
