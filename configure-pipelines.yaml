@@ -30,8 +30,6 @@ jobs:
       # concourse resources
       - set_pipeline: forgejo-commit-resource-build
         file: pipelines-repo/concourse-resources/forgejo-commit-resource-build.yaml
-      - set_pipeline: git-branches-resource-build
-        file: pipelines-repo/concourse-resources/git-branches-resource-build.yaml
       # misc
       - set_pipeline: notes-agent-image
         file: pipelines-repo/notes-agent-image/pipeline.yaml
