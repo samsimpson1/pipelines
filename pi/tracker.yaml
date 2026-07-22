@@ -1,13 +1,17 @@
+# TODO: remove this resource type once the version_type change has been released
+# https://github.com/concourse/git-resource/pull/474
 resource_types:
-  - name: git-branches
+  - name: git
     type: registry-image
     source:
-      repository: tophattedcat/git-branches-resource
+      repository: concourse/git-resource
+      tag: dev
 resources:
   - name: branches
     check_every: 20m0s
-    type: git-branches
+    type: git
     source:
+      version_type: branches
       uri: https://git.sams.wtf/things/pi.git
   - name: pipelines-repo
     type: git
