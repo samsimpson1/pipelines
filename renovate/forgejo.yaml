@@ -47,5 +47,8 @@ jobs:
             RENOVATE_PLATFORM: "forgejo"
             RENOVATE_TOKEN: "((forgejo.token))"
             RENOVATE_AUTODISCOVER: "false"
-            RENOVATE_REPOSITORIES: "things/forgejo-commit-resource,things/git-branches-resource,things/pi"
+            RENOVATE_REPOSITORIES: "things/forgejo-commit-resource,things/git-branches-resource,things/pi,coop/arch"
+            # Allowlist for postUpgradeTasks used by coop/arch's renovate.json
+            # (recomputes sha256sums_* from the release SHA256SUMS asset).
+            RENOVATE_ALLOWED_POST_UPGRADE_COMMANDS: '["node scripts/update-pkgsums.js"]'
             GITHUB_COM_TOKEN: "((.:github-token))"
