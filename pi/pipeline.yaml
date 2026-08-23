@@ -16,7 +16,7 @@ resources:
     source:
       forgejo_url: "((forgejo.url))"
       api_key: "((forgejo.token))"
-      owner: "tophattedcat"
+      owner: "things"
       repository: "pi"
 jobs:
   - name: test
