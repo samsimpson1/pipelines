@@ -1,9 +1,9 @@
-FROM alpine:3.23 AS builder
+FROM alpine:3.24 AS builder
 
 RUN apk add --no-cache go && \
   GOBIN=/go go install github.com/hetznercloud/cli/cmd/hcloud@latest
 
-FROM alpine:3.23
+FROM alpine:3.24
 
 RUN apk add --no-cache jq bash curl
 
