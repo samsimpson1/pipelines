@@ -26,7 +26,7 @@ jobs:
             type: registry-image
             source:
               repository: concourse/oci-build-task
-              tag: "0.15.3"
+              tag: "0.15.4"
           params:
             CONTEXT: repo
           inputs:
