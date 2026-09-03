@@ -37,7 +37,7 @@ jobs:
             type: registry-image
             source:
               repository: concourse/oci-build-task
-              tag: "0.15.4"
+              tag: "0.15.5"
           params:
             CONTEXT: notes-agent-git
           inputs:
