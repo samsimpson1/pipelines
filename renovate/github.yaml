@@ -39,7 +39,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/renovatebot/renovate
-              tag: "44.39"
+              tag: "44.65"
           run:
             path: renovate
           params:
