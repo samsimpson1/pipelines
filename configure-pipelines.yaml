@@ -22,9 +22,6 @@ jobs:
       # terraform
       - set_pipeline: terraform-public
         file: pipelines-repo/terraform/terraform-public.yaml
-      # renovate
-      - set_pipeline: renovate-forgejo
-        file: pipelines-repo/renovate/forgejo.yaml
       # concourse resources
       - set_pipeline: forgejo-commit-resource-build
         file: pipelines-repo/concourse-resources/forgejo-commit-resource-build.yaml
